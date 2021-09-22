@@ -1,12 +1,13 @@
 server:
-  port: 9001
+  port: 0
 
 spring:
   application:
     name: user-service
 
 eureka:
-  client:
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.id:${random.value}} # 유레카 서버에서 별도 인스턴스로 인식할 수 있게
     register-with-eureka: true
     fetch-registry: true
     service-url:
