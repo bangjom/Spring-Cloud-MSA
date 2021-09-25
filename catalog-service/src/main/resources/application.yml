@@ -3,13 +3,18 @@ server:
 
 spring:
   application:
-    name: user-service
+    name: catalog-service
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: true
       path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
@@ -18,11 +23,13 @@ spring:
 
 eureka:
   instance:
-    instance-id: ${spring.application.name}:${spring.application.id:${random.value}} # 랜덤포트일때 유레카 서버에서 별도 인스턴스로 인식할 수 있게
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
-greeting:
-  message: Welcome to the Simple E-commerce.
+logging:
+  level:
+    com.example.catalogservice: DEBUG
