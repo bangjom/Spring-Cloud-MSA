@@ -2,10 +2,13 @@ package com.example.userservice.mapper;
 
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.entity.UserEntity;
+import com.example.userservice.vo.RequestLogin;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import javax.servlet.ServletInputStream;
 
 @Mapper
 public interface UserMapper {
@@ -21,4 +24,6 @@ public interface UserMapper {
     ResponseUser entityToResponseUser(UserEntity userEntity);
 
     UserDto entityToUserDto(UserEntity userEntity);
+
+    RequestLogin reqeustToVo(ServletInputStream servletInputStream);
 }
