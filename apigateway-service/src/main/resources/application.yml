@@ -8,6 +8,9 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+token:
+  secret: user_token
+
 spring:
   application:
     name: apigateway-service
@@ -21,12 +24,12 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-#        - id: user-service
-#          uri: lb://USER-SERVICE
-#          predicates:
-#            - Path=/user-service/**
-#          filters:
-#            - CustomFilter
+        #        - id: user-service
+        #          uri: lb://USER-SERVICE
+        #          predicates:
+        #            - Path=/user-service/**
+        #          filters:
+        #            - CustomFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -51,6 +54,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -84,3 +88,5 @@ spring:
                 baseMessage: Hi, there.
                 preLogger: true
                 postLogger: true
+
+
