@@ -3,10 +3,12 @@ package com.example.userservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 @EnableJpaAuditing
 @EnableDiscoveryClient
@@ -21,4 +23,10 @@ public class UserServiceApplication {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     } //userServiceImpl랑 webSecurity 사이에서 순환 참조 생겨서 옮김
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
 }

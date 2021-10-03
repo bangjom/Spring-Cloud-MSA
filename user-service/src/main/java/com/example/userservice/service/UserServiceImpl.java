@@ -4,25 +4,34 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.entity.UserEntity;
 import com.example.userservice.mapper.UserMapper;
 import com.example.userservice.repository.UserRepository;
-import com.example.userservice.vo.ResponseUser;
+import com.example.userservice.vo.ResponseOrder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final RestTemplate restTemplate;
+    private final Environment env;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -41,7 +50,14 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found");
 
         UserDto userDto = UserMapper.INSTANCE.entityToUserDto(findUser.get());
-        userDto.setOrders(new ArrayList<>());
+
+        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
+        //using restTemplate
+        ResponseEntity<List<ResponseOrder>> orderListResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<ResponseOrder>>() {});
+        List<ResponseOrder> orderList = orderListResponse.getBody();
+        log.info("orderList : {}", orderList);
+        userDto.setOrders(orderList);
         return userDto;
     }
 
