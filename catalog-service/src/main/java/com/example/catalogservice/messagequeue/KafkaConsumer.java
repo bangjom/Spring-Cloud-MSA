@@ -16,30 +16,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class KafkaConsumer {
-    private final CatalogRepository catalogRepository;
+    private final CatalogRepository repository;
+
 
     @KafkaListener(topics = "example-catalog-topic")
     public void updateQty(String kafkaMessage) {
-        log.info("kafka message: " + kafkaMessage);
+        log.info("Kafka Message: ->" + kafkaMessage);
 
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            map = mapper.readValue(kafkaMessage, new TypeReference<>() {
-            });
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            map = mapper.readValue(kafkaMessage, new TypeReference<>() {});
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
         }
 
-        CatalogEntity productId = catalogRepository.findByProductId((String) map.get("productId"));
-        if (productId != null) {
-            productId.setStock(productId.getStock() - (Integer) map.get("qty"));
+        CatalogEntity entity = repository.findByProductId((String) map.get("productId"));
+        if (entity != null) {
+            entity.setStock(entity.getStock() - (Integer) map.get("qty"));
+            repository.save(entity);
         }
     }
 }

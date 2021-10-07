@@ -41,6 +41,7 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.1.Final'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'com.h2database:h2:1.3.148'
+    runtimeOnly 'mysql:mysql-connector-java'
 
 }
 
