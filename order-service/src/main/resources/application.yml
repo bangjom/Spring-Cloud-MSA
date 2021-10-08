@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: order-service
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
   h2:
     console:
       enabled: true
@@ -12,7 +15,7 @@ spring:
       path: /h2-console
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
