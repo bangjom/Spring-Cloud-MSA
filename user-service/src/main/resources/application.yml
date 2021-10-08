@@ -51,4 +51,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, beans, health, busrefresh
+        include: refresh, beans, health, busrefresh, info, prometheus, metrics
